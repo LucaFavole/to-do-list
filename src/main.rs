@@ -104,6 +104,7 @@ fn main() {
                 term.write_line("display (d) - Display all tasks").unwrap();
                 term.write_line("display-long (dl) - Display all tasks with their description").unwrap();
                 term.write_line("display-long-task (dlt) <name> - Display a task with its description").unwrap();
+                term.write_line("display-by-date (dbd) -d date -i interval -al (anche le done) -l (le vedi long)- Display all tasks with a specific date").unwrap();
                 term.write_line("remove (r) <name> - Remove a task").unwrap();
                 term.write_line("quit (q) - Quit the program").unwrap();
 
@@ -138,6 +139,37 @@ fn main() {
                 let topic = input.split(" ").nth(1).unwrap();
                 task_list.display_topic(topic);
             }
+            Command::Clear => {
+                term.clear_screen().unwrap();
+            }
+            Command::DisplayByDate => {
+                let mut done = false;
+                let mut not_done = true;
+                let mut long = false;
+                let mut date = "";
+                let mut i = 1;
+                let mut interval = 1;
+                while i < input.split(" ").count(){
+                    let arg = input.split(" ").nth(i).unwrap();
+                    if arg == "-d"{
+                        date = input.split(" ").nth(i+1).unwrap();
+                        i+=1;
+                    }
+                    if arg == "-al"{
+                        done = true;
+                    }
+                    if arg == "-l"{
+                        long = true;
+                    }
+                    if arg == "-i"{
+                        interval = input.split(" ").nth(i+1).unwrap().parse::<i32>().unwrap();
+                        i+=1;
+                    }
+                    i+=1;
+                }
+                task_list.display_by_dates(interval, date.parse().unwrap(), done, not_done, long);
+            }
+
         }
 
 
@@ -157,9 +189,11 @@ enum Command {
     Display,
     DisplayLong,
     DisplayLongTask,
+    DisplayByDate,
     Remove,
     Quit,
     Help,
+    Clear,
     Error,
 }
 
@@ -177,9 +211,11 @@ fn parse_command(input: &str) -> Command {
         "display" | "d" => Command::Display,
         "display-long" | "dl" => Command::DisplayLong,
         "display-long-task" | "dlt" => Command::DisplayLongTask,
+        "display-by-date" | "dbd" => Command::DisplayByDate,
         "remove" | "r" => Command::Remove,
         "quit" | "q" => Command::Quit,
         "help" | "h" => Command::Help,
+        "clear" | "cl" => Command::Clear,
         _ => Command::Error,
     }
 }

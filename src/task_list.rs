@@ -3,7 +3,7 @@ use crate::task::Task;
 use std::fs::File;
 use std::io;
 use std::io::{Read, Write};
-use chrono::Local;
+use chrono::{Date, Duration, Local, NaiveDate};
 use console::{Term, Style};
 pub(crate) struct TaskList {
     pub(crate) tasks: HashMap<String, Task>,
@@ -261,6 +261,44 @@ impl TaskList{
             Term::stdout().write_line("No task with this topic").unwrap();
         }
 
+    }
+    pub(crate) fn display_by_dates(&self, num: i32, date: String, done: bool, not_done: bool, long: bool) {
+        let mut flag = false;
+        let mut start_date =chrono::Local::now().date_naive();
+        if date.len() == 10 {
+            start_date = NaiveDate::parse_from_str(&*date, "%d/%m/%Y").unwrap();
+        }
+        for i in 0..num {
+            let new_date = start_date + Duration::days(i as i64);
+            self.display_by_date(new_date.format("%d/%m/%Y").to_string().as_ref(),done,not_done,long);
+        }
+    }
+    pub(crate)  fn display_by_date(&self, date: &str, done: bool, not_done: bool, long: bool) {
+        let mut flag = false;
+        for task in &self.tasks {
+            if task.1.deadline.eq(date) {
+                if done && task.1.done {
+                    if long {
+                        task.1.display_long();
+                    } else {
+                        task.1.display_short();
+                    }
+                    flag = true;
+                }
+                if not_done && !task.1.done {
+                    if long {
+                        task.1.display_long();
+                    } else {
+                        task.1.display_short();
+                    }
+                    flag = true;
+                }
+
+            }
+        }
+        if !flag {
+            Term::stdout().write_line("No task with this date").unwrap();
+        }
     }
 }
 
