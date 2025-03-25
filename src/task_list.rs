@@ -262,7 +262,7 @@ impl TaskList{
         }
 
     }
-    pub(crate) fn display_by_dates(&self, num: i32, date: String, done: bool, not_done: bool, long: bool) {
+    pub(crate) fn display_by_dates(&self, num: i32, date: String, done: bool, not_done: bool, long: bool, topic: &str) {
         let mut flag = false;
         let mut start_date =chrono::Local::now().date_naive();
         if date.len() == 10 {
@@ -270,12 +270,12 @@ impl TaskList{
         }
         for i in 0..num {
             let new_date = start_date + Duration::days(i as i64);
-            self.display_by_date(new_date.format("%d/%m/%Y").to_string().as_ref(),done,not_done,long);
+            self.display_by_date(new_date.format("%d/%m/%Y").to_string().as_ref(), done, not_done, long, topic);
         }
     }
-    pub(crate)  fn display_by_date(&self, date: &str, done: bool, not_done: bool, long: bool) {
-        let mut flag = false;
+    pub(crate)  fn display_by_date(&self, date: &str, done: bool, not_done: bool, long: bool, topic: &str) {
         for task in &self.tasks {
+            if topic.is_empty() || (task.1.is_some_topic() && topic == task.1.topic.as_ref().unwrap()) {
             if task.1.deadline.eq(date) {
                 if done && task.1.done {
                     if long {
@@ -283,7 +283,6 @@ impl TaskList{
                     } else {
                         task.1.display_short();
                     }
-                    flag = true;
                 }
                 if not_done && !task.1.done {
                     if long {
@@ -291,13 +290,9 @@ impl TaskList{
                     } else {
                         task.1.display_short();
                     }
-                    flag = true;
                 }
 
-            }
-        }
-        if !flag {
-            Term::stdout().write_line("No task with this date").unwrap();
+            }}
         }
     }
 }

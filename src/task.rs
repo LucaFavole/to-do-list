@@ -45,12 +45,20 @@ impl Task {
         let complete = if self.done {Style::new().green()} else {Style::new().red()};
         let blu = Style::new().blue().bold();
         let underlined = Style::new().underlined();
+        let orange_italic = Style::new().magenta().italic();
+        match self.topic {
+            Some(ref topic) => {
+                term.write_line((&orange_italic.apply_to(topic).to_string()).as_ref()).unwrap();
+            },
+            None => {}
+        }
         term.write((&blu.apply_to(&self.name).to_string()).as_ref()).unwrap();
         term.write(" - ".as_ref()).unwrap();
         term.write(&underlined.apply_to(&self.deadline).to_string().as_ref()).unwrap();
         term.write(" - ".as_ref()).unwrap();
         term.write_line((&complete.apply_to(done).to_string()).as_ref()).unwrap();
-        term.write_line(self.description.as_ref()).unwrap()
+        term.write_line(self.description.as_ref()).unwrap();
+        term.write_line("").unwrap();
     }
     // devo impl `Deserialize`
     pub fn from_json(json: &str) -> Result<Task, serde_json::Error> {
@@ -72,6 +80,12 @@ impl Task {
     }
     pub fn make_not_removable(&mut self){
         self.removable = false;
+    }
+    pub fn is_some_topic(&self) -> bool{
+        match self.topic {
+            Some(_) => true,
+            None => false
+        }
     }
 }
 
