@@ -31,7 +31,7 @@ impl TaskList{
         let task = self.tasks.get_mut(name);
         match task {
             Some(task) => {
-                self.tasks.get(name).unwrap().description.to_string();
+                task.modify_description(description.to_string());
             }
             None => {
                 let red_underlined = Style::new().red().underlined();

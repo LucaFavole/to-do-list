@@ -64,6 +64,9 @@ impl Task {
             self.deadline = date;
         }
     }
+    pub fn modify_description(&mut self, description: String){
+        self.description = description;
+    }
     pub fn add_topic(&mut self, topic: String){
         self.topic = Option::from(topic);
     }
