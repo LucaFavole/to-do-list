@@ -1,0 +1,43 @@
+pub enum Command {
+    Add,
+    ModifyDeadline,
+    ModifyDescription,
+    AddTopic,
+    DisplayAllTopic,
+    DisplayTopic,
+    MakeNotRemovable,
+    DisplayNotRemovable,
+    Complete,
+    Display,
+    DisplayLong,
+    DisplayLongTask,
+    DisplayByDate,
+    Remove,
+    Quit,
+    Help,
+    Clear,
+    Error,
+}
+
+pub fn parse_command(input: &str) -> Command {
+    match input {
+        "add" | "a" => Command::Add,
+        "modify-deadline" | "mdead" => Command::ModifyDeadline,
+        "modify-description" | "mdesc" => Command::ModifyDescription,
+        "add-topic" | "at" => Command::AddTopic,
+        "display-all-topic" | "dat" => Command::DisplayAllTopic,
+        "display-topic" | "dt" => Command::DisplayTopic,
+        "make-not-removable" | "mnr" => Command::MakeNotRemovable,
+        "display-not-removable" | "dnr" => Command::DisplayNotRemovable,
+        "complete" | "c" => Command::Complete,
+        "display" | "d" => Command::Display,
+        "display-long" | "dl" => Command::DisplayLong,
+        "display-long-task" | "dlt" => Command::DisplayLongTask,
+        "display-by-date" | "dbd" => Command::DisplayByDate,
+        "remove" | "r" => Command::Remove,
+        "quit" | "q" => Command::Quit,
+        "help" | "h" => Command::Help,
+        "clear" | "cl" => Command::Clear,
+        _ => Command::Error,
+    }
+}

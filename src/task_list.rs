@@ -1,16 +1,11 @@
-use std::collections::HashMap;
-use crate::task::Task;
-use std::fs::File;
-use std::io;
-use std::io::{Read, Write};
-use chrono::{Date, Duration, Local, NaiveDate};
-use console::{Term, Style};
-pub(crate) struct TaskList {
-    pub(crate) tasks: HashMap<String, Task>,
+use crate::{Task, Style, Term, Local, Write, NaiveDate, Duration, Result, Read, File, HashMap};
+
+pub struct TaskList {
+    pub tasks: HashMap<String, Task>,
 }
 
 impl TaskList{
-    pub fn load()-> io::Result<TaskList>{
+    pub fn load()-> Result<TaskList>{
         let mut file = File::open("tasks.json")?;
         let mut data = String::new();
         file.read_to_string(&mut data)?;
@@ -18,7 +13,7 @@ impl TaskList{
         Ok(TaskList{tasks})
 
     }
-    pub fn save(&self) -> io::Result<()>{
+    pub fn save(&self) -> Result<()>{
         let mut file = File::create("tasks.json")?;
         let data = serde_json::to_string(&self.tasks)?;
         file.write_all(data.as_bytes())?;
@@ -189,7 +184,7 @@ impl TaskList{
             }
         }
     }*/
-    pub(crate) fn remove_task_done_with_past_deadline(&mut self) {
+    pub fn remove_task_done_with_past_deadline(&mut self) {
         Term::stdout().write_line("Task removed:").unwrap();
         let mut index : Vec<String>= Vec::new();
         for task in &self.tasks {
@@ -205,7 +200,7 @@ impl TaskList{
             }
         }
 }
-    pub(crate) fn add_topic(&mut self, name: &str, topic: &str) {
+    pub fn add_topic(&mut self, name: &str, topic: &str) {
         let task = self.tasks.get_mut(name);
         match task {
             Some(task) => {
@@ -217,7 +212,7 @@ impl TaskList{
             }
         }
     }
-    pub(crate) fn make_not_removable(&mut self, name: &str) {
+    pub fn make_not_removable(&mut self, name: &str) {
         let task =self.tasks.get_mut(name);
         match task {
             Some(task) => {
@@ -229,14 +224,14 @@ impl TaskList{
             }
         }
     }
-    pub(crate) fn display_not_removable(&self) {
+    pub fn display_not_removable(&self) {
         for task in &self.tasks {
             if !task.1.removable {
                 task.1.display_short();
             }
         }
     }
-    pub(crate) fn display_all_topic(&self) {
+    pub fn display_all_topic(&self) {
         let mut topics: Vec<String> = Vec::new();
         for task in &self.tasks {
             if task.1.topic.is_some() {
@@ -249,7 +244,7 @@ impl TaskList{
             Term::stdout().write_line(&topic).unwrap();
         }
     }
-    pub(crate) fn display_topic(&self, name: &str) {
+    pub fn display_topic(&self, name: &str) {
         let mut flag = false;
         for task in &self.tasks {
             if task.1.topic.is_some() && task.1.topic.as_ref().unwrap() == name {
@@ -262,7 +257,7 @@ impl TaskList{
         }
 
     }
-    pub(crate) fn display_by_dates(&self, num: i32, date: String, done: bool, not_done: bool, long: bool, topic: &str) {
+    pub fn display_by_dates(&self, num: i32, date: String, done: bool, not_done: bool, long: bool, topic: &str) {
         let mut flag = false;
         let mut start_date =chrono::Local::now().date_naive();
         if date.len() == 10 {

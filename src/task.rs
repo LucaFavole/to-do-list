@@ -1,8 +1,5 @@
-use std::io::Write;
-use serde::{Deserialize, Serialize};
-use chrono::{Local};
-use console::{Term, Style};
-use crate::task_list::compare_date;
+use crate::{Deserialize, Serialize, Style, Term, Local, Write, compare_date};
+
 #[derive(Serialize, Deserialize)]
 pub struct Task {
     pub(crate) name: String,
