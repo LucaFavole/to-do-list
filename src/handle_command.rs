@@ -14,8 +14,14 @@ pub fn handle_add(task_list: &mut TaskList, input: &str) {
     let name = input.split(" ").nth(1).unwrap();
     let deadline = input.split(" ").nth(2).unwrap();
     let mut description = name.clone();
-    if input.split(" ").count() >= 4 { description = input.split(" ").nth(3).unwrap(); }
-    task_list.add_from_cmd(name, description.parse().unwrap(), deadline.parse().unwrap());
+    if input.split(" ").count() >= 4 {
+        let desc = input.split(" ").skip(3).collect::<Vec<&str>>().join(" ");
+        description = desc.as_str().clone();
+        task_list.add_from_cmd(name, description.parse().unwrap(), deadline.parse().unwrap());
+    }else{
+        task_list.add_from_cmd(name, description.parse().unwrap(), deadline.parse().unwrap());
+    }
+
     task_list.save().unwrap();
 }
 
@@ -30,7 +36,7 @@ pub fn handle_modify_deadline(task_list: &mut TaskList, input: &str) {
 pub fn handle_modify_description(task_list: &mut TaskList, input: &str) {
     if check_input(input, 3) { return; }
     let name = input.split(" ").nth(1).unwrap().trim();
-    let description = input.split(" ").nth(2).unwrap().trim();
+    let description =  &*input.split(" ").skip(2).collect::<Vec<&str>>().join(" ");
     task_list.modify_description(name, description);
     task_list.save().unwrap();
 }

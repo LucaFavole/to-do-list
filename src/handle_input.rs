@@ -1,4 +1,4 @@
-use crate::{parse_command, Command, TaskList, Style, Term, Write, stdin, stdout, handle_add, handle_modify_deadline, handle_modify_description, handle_complete, handle_display_long_task, handle_remove, handle_add_topic, handle_make_not_removable, handle_display_topic, handle_display_by_date, display_help, display_error};
+use crate::{parse_command, Command, TaskList, Term, Write, stdin, stdout, handle_add, handle_modify_deadline, handle_modify_description, handle_complete, handle_display_long_task, handle_remove, handle_add_topic, handle_make_not_removable, handle_display_topic, handle_display_by_date, display_help, display_error};
 pub fn handle_input(){
     let mut task_list = TaskList::load().unwrap_or_else(|_| TaskList { tasks: Default::default() });
     let term = Term::stdout();
