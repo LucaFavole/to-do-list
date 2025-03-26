@@ -90,15 +90,7 @@ impl TaskList{
         }
     }
 
-    pub fn add_from_cmd(&mut self, input : String){
-        if input.split(" ").count() < 4{
-            let red_underlined = Style::new().red().underlined();
-            Term::stdout().write_line(&red_underlined.apply_to("Invalid command").to_string()).unwrap();
-            return;
-        }
-        let name = input.split(" ").nth(1).unwrap();
-        let deadline = input.split(" ").nth(2).unwrap();
-        let description = input.split(" ").skip(3).collect::<Vec<&str>>().join(" ");
+    pub fn add_from_cmd(&mut self, name : &str, description: String, deadline: String){
         let task = self.tasks.get(name);
         if task.is_some(){
             let red_underlined = Style::new().red().underlined();
@@ -258,7 +250,6 @@ impl TaskList{
 
     }
     pub fn display_by_dates(&self, num: i32, date: String, done: bool, not_done: bool, long: bool, topic: &str) {
-        let mut flag = false;
         let mut start_date =chrono::Local::now().date_naive();
         if date.len() == 10 {
             start_date = NaiveDate::parse_from_str(&*date, "%d/%m/%Y").unwrap();
