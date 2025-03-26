@@ -21,11 +21,7 @@ pub fn handle_input(){
                 //term.clear_screen().unwrap();
             },
             Command::ModifyDeadline => {
-                if input.split(" ").count() < 3{
-                    let red_underlined = Style::new().red().underlined();
-                    term.write_line(&red_underlined.apply_to("Invalid command").to_string()).unwrap();
-                    continue;
-                }
+                if check_input(&*input, 3) {continue;}
                 let name = input.split(" ").nth(1).unwrap();
                 let name = name.trim();
                 let date = input.split(" ").nth(2).unwrap();
@@ -35,11 +31,7 @@ pub fn handle_input(){
                 //term.clear_screen().unwrap();
             }
             Command::ModifyDescription => {
-                if input.split(" ").count() < 3{
-                    let red_underlined = Style::new().red().underlined();
-                    term.write_line(&red_underlined.apply_to("Invalid command").to_string()).unwrap();
-                    continue;
-                }
+                if check_input(&*input, 3) {continue;}
                 let name = input.split(" ").nth(1).unwrap();
                 let name = name.trim();
                 let description = input.split(" ").nth(2).unwrap();
@@ -49,11 +41,7 @@ pub fn handle_input(){
                 //term.clear_screen().unwrap();
             }
             Command::Complete => {
-                if input.split(" ").count() < 2{
-                    let red_underlined = Style::new().red().underlined();
-                    term.write_line(&red_underlined.apply_to("Invalid command").to_string()).unwrap();
-                    continue;
-                }
+                if check_input(&*input, 2) {continue;}
                 let name = input.split(" ").nth(1).unwrap();
                 let name = name.trim();
                 task_list.complete(name);
@@ -62,11 +50,7 @@ pub fn handle_input(){
             }
             Command::Display => task_list.display(),
             Command::DisplayLongTask => {
-                if input.split(" ").count() < 2{
-                    let red_underlined = Style::new().red().underlined();
-                    term.write_line(&red_underlined.apply_to("Invalid command").to_string()).unwrap();
-                    continue;
-                }
+                if check_input(&*input, 2) {continue;}
                 let name = input.split(" ").nth(1).unwrap();
                 task_list.display_long_task(name);
             }
@@ -74,11 +58,7 @@ pub fn handle_input(){
                 task_list.display_long();
             }
             Command::Remove => {
-                if input.split(" ").count() < 2{
-                    let red_underlined = Style::new().red().underlined();
-                    term.write_line(&red_underlined.apply_to("Invalid command").to_string()).unwrap();
-                    continue;
-                }
+                if check_input(&*input, 2) {continue;}
                 let name = input.split(" ").nth(1).unwrap();
                 task_list.remove(name);
                 task_list.save().unwrap();
@@ -140,7 +120,7 @@ pub fn handle_input(){
             }
             Command::DisplayByDate => {
                 let mut done = false;
-                let mut not_done = true;
+                let not_done = true;
                 let mut long = false;
                 let mut date = "";
                 let mut i = 1;
@@ -175,4 +155,14 @@ pub fn handle_input(){
 
 
     }
+}
+
+fn check_input(input: &str, n: usize) -> bool{
+    if input.split(" ").count() < n{
+        let red_underlined = Style::new().red().underlined();
+        let term = Term::stdout();
+        term.write_line(&red_underlined.apply_to("Invalid command").to_string()).unwrap();
+        return false
+    }
+    true
 }
