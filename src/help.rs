@@ -4,7 +4,7 @@ pub fn help(){
     modify-deadline <name> <new deadline> : Modify the deadline of a task
     modify-description <name> <new description> : Modify the description of a task
     complete <name> : Mark a task as completed
-    display : Display all tasks
+    display : Display all tasks and other things
     display-long : Display all tasks with their description
     display-long-task <name> : Display a task with its description
     display-by-date <date> : Display all tasks with a deadline equal to the date and other things
@@ -140,10 +140,13 @@ pub fn help_display_not_removable(){
 }
 pub fn help_display(){
     println!("
-    display : Display all tasks
+    display : Display all tasks and other things
     You can also use the alias 'd'
-    If you want to display all tasks, you can type:
+    If you want to display all tasks and other things, you can type:
     'display' or 'd'
+    you can use -p to display all tasks with a priority greater than 0 in order of priority
+    or -p 'priority' to display all tasks with a priority greater or equal to 'priority' in order of priority
+    you can use -l to display the long version of the tasks
     ");
 
 }
