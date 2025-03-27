@@ -191,9 +191,17 @@ pub fn handle_display(task_list: &TaskList, input: &str) {
             if i + 1 < input.split(" ").count() {
                 let next_arg = input.split(" ").nth(i + 1).unwrap();
                 if !next_arg.starts_with('-') {
+                    if next_arg.parse::<i32>().is_ok(){
                     priority = next_arg.parse().unwrap();
-                    i += 1;
+                        i += 1;
+                    }
+                    else{
+                        priority = 0;}
+
                 }
+            }else{
+                priority = 0;
+
             }
             priorityf = true;
         }
