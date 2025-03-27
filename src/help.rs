@@ -182,4 +182,13 @@ pub fn help_clear(){
     'clear' or 'cl'
     ");
 
+
+}
+pub fn help_display_all_topic(){
+    println!("
+    display-all-topic : Display all topics
+    You can also use the alias 'dat'
+    If you want to display all topics, you can type:
+    'display-all-topic' or 'dat'
+    ")
 }
