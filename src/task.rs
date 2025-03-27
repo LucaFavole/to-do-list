@@ -1,4 +1,3 @@
-use console::Color::Yellow;
 use crate::{Deserialize, Serialize, Style, Term, Local, Write, compare_date, Duration};
 
 #[derive(Serialize, Deserialize)]
@@ -104,7 +103,7 @@ fn check_date(date: &str) -> bool {
     let month = datec[1].parse::<i32>().unwrap();
     let year = datec[2].parse::<i32>().unwrap();
     if day < 1 || day > 31 || month < 1 || month > 12 || year < 2020 ||  compare_date(&date.to_string(), Local::now().format("%d/%m/%Y").to_string())<0 {
-        let mut term = Term::stdout();
+        let term = Term::stdout();
         let red_underlined = Style::new().red().underlined();
         term.write_line(&red_underlined.apply_to("Invalid date").to_string()).unwrap();
         return false;

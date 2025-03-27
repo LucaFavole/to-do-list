@@ -98,7 +98,7 @@ impl TaskList{
     pub fn remove(&mut self, name: &str) {
         let task = self.tasks.get_mut(name);
         match task {
-            Some(task) => {
+            Some(_task) => {
                 self.tasks.remove(name);
             }
             None => {

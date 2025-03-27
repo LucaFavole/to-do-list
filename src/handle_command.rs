@@ -1,4 +1,4 @@
-use crate::{Term, Style, TaskList, Write, Command, parse_command, help, help_add, help_modify_deadline, help_modify_description, help_complete, help_display, help_display_long_task, help_display_long, help_remove, help_quit, help_help, help_add_topic, help_make_not_removable, help_display_not_removable, help_display_all_topic, help_display_topic, help_display_by_date, help_clear};
+use crate::{Term, Style, TaskList, Command, parse_command, help, help_add, help_modify_deadline, help_modify_description, help_complete, help_display, help_display_long_task, help_display_long, help_remove, help_quit, help_help, help_add_topic, help_make_not_removable, help_display_not_removable, help_display_all_topic, help_display_topic, help_display_by_date, help_clear};
 
 fn check_input(input: &str, n: usize) -> bool{
     if input.split(" ").count() < n{
@@ -13,10 +13,10 @@ pub fn handle_add(task_list: &mut TaskList, input: &str) {
     if check_input(input, 3) { return; }
     let name = input.split(" ").nth(1).unwrap();
     let deadline = input.split(" ").nth(2).unwrap();
-    let mut description = name.clone();
+    let mut description = name;
     if input.split(" ").count() >= 4 {
         let desc = input.split(" ").skip(3).collect::<Vec<&str>>().join(" ");
-        description = desc.as_str().clone();
+        description = desc.as_str();
         task_list.add_from_cmd(name, description.parse().unwrap(), deadline.parse().unwrap());
     }else{
         task_list.add_from_cmd(name, description.parse().unwrap(), deadline.parse().unwrap());
