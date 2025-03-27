@@ -1,3 +1,4 @@
+use console::Color::Yellow;
 use crate::{Deserialize, Serialize, Style, Term, Local, Write, compare_date, Duration};
 
 #[derive(Serialize, Deserialize)]
@@ -7,7 +8,8 @@ pub struct Task {
     pub(crate) done: bool,
     pub(crate) deadline: String,
     pub(crate) topic : Option<String>,
-    pub(crate) removable: bool
+    pub(crate) removable: bool,
+    pub(crate) priority: i32
 }
 
 impl Task {
@@ -18,7 +20,8 @@ impl Task {
             done: false,
             deadline: if check_date(date.as_ref()) {date} else { if is_i64(&*date) {(Local::now() + Duration::days(date.parse::<i64>().unwrap())).format("%d/%m/%Y").to_string()} else{Local::now().format("%d/%m/%Y").to_string()}},
             topic: None,
-            removable: true
+            removable: true,
+            priority: 0
         }
     }
     pub fn complete (&mut self){
@@ -49,6 +52,7 @@ impl Task {
             },
             None => {}
         }
+        term.write_line((&Style::new().yellow().bold().apply_to("Priority: ".to_owned() + &*self.priority.to_string()).to_string()).as_ref()).unwrap();
         term.write((&blu.apply_to(&self.name).to_string()).as_ref()).unwrap();
         term.write(" - ".as_ref()).unwrap();
         term.write(&underlined.apply_to(&self.deadline).to_string().as_ref()).unwrap();
@@ -57,7 +61,6 @@ impl Task {
         term.write_line(self.description.as_ref()).unwrap();
         term.write_line("").unwrap();
     }
-    // devo impl `Deserialize`
     pub fn from_json(json: &str) -> Result<Task, serde_json::Error> {
          serde_json::from_str(json)
     }
@@ -83,6 +86,9 @@ impl Task {
             Some(_) => true,
             None => false
         }
+    }
+    pub fn add_priority(&mut self, priority: i32){
+        self.priority = priority;
     }
 }
 

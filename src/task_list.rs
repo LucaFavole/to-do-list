@@ -64,6 +64,24 @@ impl TaskList{
             task.1.display_short();
         }
     }
+    pub fn display_priority(&self, priority: i32){
+        let mut tasks = self.tasks.values().collect::<Vec<&Task>>();
+        tasks.sort_by(|b, a| a.priority.cmp(&b.priority));
+        for task in tasks{
+            if task.priority >= priority{
+                task.display_short();
+            }
+        }
+    }
+    pub fn display_long_priority(&self, priority: i32){
+        let mut tasks = self.tasks.values().collect::<Vec<&Task>>();
+        tasks.sort_by(|b, a| a.priority.cmp(&b.priority));
+        for task in tasks{
+            if task.priority >= priority{
+                task.display_long();
+            }
+        }
+    }
     pub fn display_long_task(&mut self, name: &str) {
         let task = self.tasks.get_mut(name);
         match task {
@@ -287,6 +305,23 @@ impl TaskList{
                 }
 
             }}
+        }
+    }
+    pub(crate) fn add_priority(&mut self, name: &str, priority: &str) {
+        let task = self.tasks.get_mut(name);
+        match task {
+            Some(task) => {
+                if priority.parse::<i32>().is_ok(){
+                    task.add_priority(priority.parse().unwrap());
+                }else{
+                    let red_underlined = Style::new().red().underlined();
+                    Term::stdout().write_line(&red_underlined.apply_to("Invalid priority").to_string()).unwrap();
+                }
+            }
+            None => {
+                let red_underlined = Style::new().red().underlined();
+                Term::stdout().write_line(&red_underlined.apply_to("Task not found").to_string()).unwrap();
+            }
         }
     }
 }
