@@ -181,6 +181,7 @@ impl TaskList{
         let mut index : Vec<String>= Vec::new();
         for task in &self.tasks {
             if compare_date(&task.1.deadline, Local::now().format("%d/%m/%Y").to_string()) < 0 && task.1.done && task.1.removable {
+                task.1.display_short();
                 index.insert(0, task.1.name.clone());
             }
         }

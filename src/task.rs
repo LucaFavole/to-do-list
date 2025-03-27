@@ -1,4 +1,4 @@
-use crate::{Deserialize, Serialize, Style, Term, Local, Write, compare_date};
+use crate::{Deserialize, Serialize, Style, Term, Local, Write, compare_date, Duration};
 
 #[derive(Serialize, Deserialize)]
 pub struct Task {
@@ -16,7 +16,7 @@ impl Task {
             name,
             description,
             done: false,
-            deadline: if check_date(date.as_ref()) {date} else {Local::now().format("%d/%m/%Y").to_string()},
+            deadline: if check_date(date.as_ref()) {date} else { if is_i64(&*date) {(Local::now() + Duration::days(date.parse::<i64>().unwrap())).format("%d/%m/%Y").to_string()} else{Local::now().format("%d/%m/%Y").to_string()}},
             topic: None,
             removable: true
         }
@@ -89,9 +89,9 @@ impl Task {
 fn check_date(date: &str) -> bool {
     let datec = date.split("/").collect::<Vec<&str>>();
     if datec.len() != 3 {
-        let mut term = Term::stdout();
-        let red_underlined = Style::new().red().underlined();
-        term.write_line(&red_underlined.apply_to("Invalid date").to_string()).unwrap();
+        //let mut term = Term::stdout();
+        //let red_underlined = Style::new().red().underlined();
+        //term.write_line(&red_underlined.apply_to("Invalid date").to_string()).unwrap();
         return false;
     }
     let day = datec[0].parse::<i32>().unwrap();
@@ -104,4 +104,8 @@ fn check_date(date: &str) -> bool {
         return false;
     }
     true
+}
+
+fn is_i64(s: &str) -> bool {
+    s.parse::<i64>().is_ok()
 }
