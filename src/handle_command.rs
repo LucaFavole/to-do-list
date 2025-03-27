@@ -89,6 +89,7 @@ pub fn display_help(input: &str) {
             let term = Term::stdout();
             term.write_line(&red_underlined.apply_to("Invalid command").to_string()).unwrap();
         }
+        Command::AddPriority => {}
     }
 
 }
@@ -170,3 +171,48 @@ pub fn handle_display_by_date(task_list: &TaskList, input: &str) {
     if interval>=0 {interval+=1} else { interval-=1 }
     task_list.display_by_dates(interval, date.parse().unwrap(), done, not_done, long, topic);
 }
+
+pub fn handle_add_priority(task_list: &mut TaskList, input: &str) {
+    if check_input(input, 3) { return; }
+    let name = input.split(" ").nth(1).unwrap().trim();
+    let priority = input.split(" ").nth(2).unwrap().trim();
+    task_list.add_priority(name, priority);
+    task_list.save().unwrap();
+}
+
+pub fn handle_display(task_list: &TaskList, input: &str) {
+    let mut priorityf = false;
+    let mut priority = 0;
+    let mut long = false;
+    let mut i = 1;
+    while i < input.split(" ").count() {
+        let arg = input.split(" ").nth(i).unwrap();
+        if arg == "-p" {
+            if i + 1 < input.split(" ").count() {
+                let next_arg = input.split(" ").nth(i + 1).unwrap();
+                if !next_arg.starts_with('-') {
+                    if next_arg.parse::<i32>().is_ok(){
+                    priority = next_arg.parse().unwrap();
+                        i += 1;
+                    }
+                    else{
+                        priority = 0;}
+
+                }
+            }else{
+                priority = 0;
+
+            }
+            priorityf = true;
+        }
+        if arg == "-l" {
+            long = true;
+        }
+        i+=1;
+    }
+    if priorityf {
+        if long { task_list.display_long_priority(priority); } else { task_list.display_priority(priority); }
+    }else{
+        if long {task_list.display_long();} else { task_list.display();}
+        }
+    }

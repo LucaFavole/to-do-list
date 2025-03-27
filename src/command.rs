@@ -17,6 +17,7 @@ pub enum Command {
     Help,
     Clear,
     Error,
+    AddPriority,
 }
 
 pub fn parse_command(input: &str) -> Command {
@@ -38,6 +39,7 @@ pub fn parse_command(input: &str) -> Command {
         "quit" | "q" => Command::Quit,
         "help" | "h" => Command::Help,
         "clear" | "cl" => Command::Clear,
+        "add-priority" | "ap" => Command::AddPriority,
         _ => Command::Error,
     }
 }

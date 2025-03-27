@@ -1,4 +1,4 @@
-use crate::{parse_command, Command, TaskList, Term, Write, stdin, stdout, handle_add, handle_modify_deadline, handle_modify_description, handle_complete, handle_display_long_task, handle_remove, handle_add_topic, handle_make_not_removable, handle_display_topic, handle_display_by_date, display_help, display_error};
+use crate::{parse_command, Command, TaskList, Term, Write, stdin, stdout, handle_add, handle_modify_deadline, handle_modify_description, handle_complete, handle_display_long_task, handle_remove, handle_add_topic, handle_make_not_removable,handle_display, handle_display_topic,handle_add_priority, handle_display_by_date, display_help, display_error};
 pub fn handle_input(){
     let mut task_list = TaskList::load().unwrap_or_else(|_| TaskList { tasks: Default::default() });
     let term = Term::stdout();
@@ -19,7 +19,7 @@ pub fn handle_input(){
             Command::ModifyDeadline => handle_modify_deadline(&mut task_list, &*input),
             Command::ModifyDescription => handle_modify_description(&mut task_list, &*input),
             Command::Complete => handle_complete(&mut task_list, &*input),
-            Command::Display => task_list.display(),
+            Command::Display => handle_display(&mut task_list, &*input),
             Command::DisplayLongTask => handle_display_long_task(&mut task_list, &*input),
             Command::DisplayLong => task_list.display_long(),
             Command::Remove => handle_remove(&mut task_list, &*input),
@@ -34,6 +34,7 @@ pub fn handle_input(){
             Command::Clear => term.clear_screen().unwrap(),
             Command::DisplayByDate => handle_display_by_date(&mut task_list, &*input),
 
+            Command::AddPriority => handle_add_priority(&mut task_list, &*input),
         }
 
 
