@@ -255,9 +255,16 @@ impl TaskList{
         if date.len() == 10 {
             start_date = NaiveDate::parse_from_str(&*date, "%d/%m/%Y").unwrap();
         }
+        if num>=0{
         for i in 0..num {
             let new_date = start_date + Duration::days(i as i64);
             self.display_by_date(new_date.format("%d/%m/%Y").to_string().as_ref(), done, not_done, long, topic);
+        }}
+        else{
+            for i in 0..-num {
+                let new_date = start_date - Duration::days(i as i64);
+                self.display_by_date(new_date.format("%d/%m/%Y").to_string().as_ref(), done, not_done, long, topic);
+            }
         }
     }
     pub(crate)  fn display_by_date(&self, date: &str, done: bool, not_done: bool, long: bool, topic: &str) {

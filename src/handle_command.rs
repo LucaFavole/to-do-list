@@ -125,13 +125,18 @@ pub fn handle_display_by_date(task_list: &TaskList, input: &str) {
     let mut long = false;
     let mut date = "";
     let mut i = 1;
-    let mut interval = 1;
+    let mut interval = 0;
     let mut topic = "";
     while i < input.split(" ").count() {
         let arg = input.split(" ").nth(i).unwrap();
         if arg == "-d" {
-            date = input.split(" ").nth(i + 1).unwrap();
-            i += 1;
+            if i + 1 < input.split(" ").count() {
+                let next_arg = input.split(" ").nth(i + 1).unwrap();
+                if !next_arg.starts_with('-') {
+                    date = next_arg;
+                    i += 1;
+                }
+            }
         }
         if arg == "-al" {
             done = true;
@@ -140,14 +145,28 @@ pub fn handle_display_by_date(task_list: &TaskList, input: &str) {
             long = true;
         }
         if arg == "-i" {
-            interval = input.split(" ").nth(i + 1).unwrap().parse::<i32>().unwrap();
-            i += 1;
+            if i + 1 < input.split(" ").count() {
+                let next_arg = input.split(" ").nth(i + 1).unwrap();
+                    if next_arg.parse::<i32>().is_ok(){
+                        interval = next_arg.parse().unwrap();
+
+                    }else{
+                        interval=0;
+                    }
+                    i += 1;
+            }
         }
         if arg == "-t" {
-            topic = input.split(" ").nth(i + 1).unwrap();
-            i += 1;
+            if i + 1 < input.split(" ").count() {
+                let next_arg = input.split(" ").nth(i + 1).unwrap();
+                if !next_arg.starts_with('-') {
+                    topic = next_arg;
+                    i += 1;
+                }
+            }
         }
         i += 1;
     }
+    if interval>=0 {interval+=1} else { interval-=1 }
     task_list.display_by_dates(interval, date.parse().unwrap(), done, not_done, long, topic);
 }
