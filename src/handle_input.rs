@@ -24,7 +24,7 @@ pub fn handle_input(){
             Command::DisplayLong => task_list.display_long(),
             Command::Remove => handle_remove(&mut task_list, &*input),
             Command::Quit => break,
-            Command::Help => display_help(&term),
+            Command::Help => display_help(&*input),
             Command::Error => display_error(&term),
             Command::AddTopic => handle_add_topic(&mut task_list, &*input),
             Command::MakeNotRemovable => handle_make_not_removable(&mut task_list, &*input),

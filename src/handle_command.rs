@@ -1,4 +1,4 @@
-use crate::{Term, Style, TaskList, Write};
+use crate::{Term, Style, TaskList, Write, Command, parse_command, help, help_add, help_modify_deadline, help_modify_description, help_complete, help_display, help_display_long_task, help_display_long, help_remove, help_quit, help_help, help_add_topic, help_make_not_removable, help_display_not_removable, help_display_all_topic, help_display_topic, help_display_by_date, help_clear};
 
 fn check_input(input: &str, n: usize) -> bool{
     if input.split(" ").count() < n{
@@ -61,22 +61,36 @@ pub fn handle_remove(task_list: &mut TaskList, input: &str) {
     task_list.save().unwrap();
 }
 
-pub fn display_help(term: &Term) {
-    term.write_line("add (a) <name> <deadline> - Add a task").unwrap();
-    term.write_line("modify-deadline (mdead) <name> <new deadline> - Modify the deadline of a task").unwrap();
-    term.write_line("modify-description (mdesc) <name> <new description> - Modify the description of a task").unwrap();
-    term.write_line("add-topic (at) <name> <topic> - Add a topic to a task").unwrap();
-    term.write_line("display-all-topic (dat) - Display all topics").unwrap();
-    term.write_line("display-topic (dt) <topic> - Display all tasks with a topic").unwrap();
-    term.write_line("make-not-removable (mnr) <name> - Make a task not removable").unwrap();
-    term.write_line("display-not-removable (dnr) - Display all tasks that are not removable").unwrap();
-    term.write_line("complete (c) <name> - Mark a task as done").unwrap();
-    term.write_line("display (d) - Display all tasks").unwrap();
-    term.write_line("display-long (dl) - Display all tasks with their description").unwrap();
-    term.write_line("display-long-task (dlt) <name> - Display a task with its description").unwrap();
-    term.write_line("display-by-date (dbd) -d date -i interval -al (anche le done) -l (le vedi long)- Display all tasks with a specific date").unwrap();
-    term.write_line("remove (r) <name> - Remove a task").unwrap();
-    term.write_line("quit (q) - Quit the program").unwrap();
+pub fn display_help(input: &str) {
+    if input.split(" ").count()==1{
+        help();
+        return;
+    }
+    match parse_command(input.split(" ").nth(1).unwrap()){
+        Command::Add => help_add(),
+        Command::ModifyDeadline => help_modify_deadline(),
+        Command::ModifyDescription => help_modify_description(),
+        Command::Complete => help_complete(),
+        Command::Display => help_display(),
+        Command::DisplayLongTask => help_display_long_task(),
+        Command::DisplayLong => help_display_long(),
+        Command::Remove => help_remove(),
+        Command::Quit => help_quit(),
+        Command::Help => help_help(),
+        Command::AddTopic => help_add_topic(),
+        Command::MakeNotRemovable => help_make_not_removable(),
+        Command::DisplayNotRemovable => help_display_not_removable(),
+        Command::DisplayAllTopic => help_display_all_topic(),
+        Command::DisplayTopic => help_display_topic(),
+        Command::Clear => help_clear(),
+        Command::DisplayByDate => help_display_by_date(),
+        Command::Error => {
+            let red_underlined = Style::new().red().underlined();
+            let term = Term::stdout();
+            term.write_line(&red_underlined.apply_to("Invalid command").to_string()).unwrap();
+        }
+    }
+
 }
 
 pub fn display_error(term: &Term) {
