@@ -26,9 +26,7 @@ impl TaskList{
         match home_dir{
             None => {println!("errore"); Ok(())},
             Some(_) => {
-                println!("{:?}", home_dir);
                 let mut file_path = home_dir.unwrap().to_str().unwrap().to_string() +"\\to-do-list";
-                println!("{}", file_path);
                 std::fs::create_dir_all(&file_path)?;
                 file_path+= "\\tasks.json";
                 let mut file = File::create(file_path)?;
