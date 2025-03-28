@@ -195,3 +195,12 @@ pub fn help_display_all_topic(){
     'display-all-topic' or 'dat'
     ")
 }
+pub fn help_add_priority(){
+    println!("
+    add-priority : Add a priority to a task
+    You can also use the alias 'ap'
+    If you want to add a priority 'priority' to a task with a name 'name', you can type:
+    'add-priority name priority' or 'ap name priority'
+    ");
+
+}
