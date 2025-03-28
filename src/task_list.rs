@@ -1,3 +1,4 @@
+use serde_json::to_string;
 use crate::{Task, Style, Term, Local, Write, NaiveDate, Duration, Result, Read, File, HashMap};
 
 pub struct TaskList {
@@ -6,18 +7,36 @@ pub struct TaskList {
 
 impl TaskList{
     pub fn load()-> Result<TaskList>{
-        let mut file = File::open("tasks.json")?;
-        let mut data = String::new();
-        file.read_to_string(&mut data)?;
-        let tasks: HashMap<String, Task> = serde_json::from_str(&data)?;
-        Ok(TaskList{tasks})
+        let home_dir = dirs::home_dir();
+        match  home_dir {
+            None => {println!("errore"); Ok(TaskList{tasks: HashMap::new()})},
+            Some(_) => {
+                let file_path = home_dir.unwrap().to_str().unwrap().to_string() +"\\to-do-list\\tasks.json";
+                let mut file = File::open(file_path)?;
+                let mut data = String::new();
+                file.read_to_string(&mut data)?;
+                let tasks: HashMap<String, Task> = serde_json::from_str(&data)?;
+                Ok(TaskList{tasks})
+
+            }
+        }
 
     }
     pub fn save(&self) -> Result<()>{
-        let mut file = File::create("tasks.json")?;
-        let data = serde_json::to_string(&self.tasks)?;
-        file.write_all(data.as_bytes())?;
-        Ok(())
+        let home_dir = dirs::home_dir();
+        match home_dir{
+            None => {println!("errore"); Ok(())},
+            Some(_) => {
+                println!("{:?}", home_dir);
+                let mut file_path = home_dir.unwrap().to_str().unwrap().to_string() +"\\to-do-list";
+                println!("{}", file_path);
+                std::fs::create_dir_all(&file_path)?;
+                file_path+= "\\tasks.json";
+                let mut file = File::create(file_path)?;
+                let data = serde_json::to_string(&self.tasks)?;
+                file.write_all(data.as_bytes())?;
+                Ok(())}
+        }
     }
     pub fn add(&mut self, task: Task){
         self.tasks.insert(task.name.clone(), task);
