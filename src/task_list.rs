@@ -1,4 +1,3 @@
-use serde_json::to_string;
 use crate::{Task, Style, Term, Local, Write, NaiveDate, Duration, Result, Read, File, HashMap};
 
 pub struct TaskList {
