@@ -16,7 +16,7 @@ pub fn handle_input(){
         let first = input.split(" ").next().unwrap().to_ascii_lowercase();
         match parse_command(&*first) {
             Command::Add => handle_add(&mut task_list, &*input),
-            Command::ModifyDeadline => handle_modify_deadline(&mut task_list, &*input),
+            Command::ModifyDeadline => handle_modify_deadline(&mut task_list, &input),
             Command::ModifyDescription => handle_modify_description(&mut task_list, &*input),
             Command::Complete => handle_complete(&mut task_list, &*input),
             Command::Display => handle_display(&mut task_list, &*input),
